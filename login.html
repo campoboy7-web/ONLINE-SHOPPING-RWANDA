@@ -1,0 +1,345 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Login - Online Shopping Rwanda</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .box {
+            width: 380px;
+            background: white;
+            padding: 30px;
+
+            border-radius: 12px;
+
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #16a34a;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+
+            margin-bottom: 12px;
+
+            border: 1px solid #ddd;
+            border-radius: 7px;
+
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+
+            border: none;
+            border-radius: 7px;
+
+            background: #22c55e;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .switch {
+            text-align: center;
+            margin-top: 18px;
+            color: #666;
+        }
+
+        .switch span {
+            color: #16a34a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 12px;
+            color: #dc2626;
+        }
+
+        #signup {
+            display: none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="box">
+
+        <h1>🛒 Online Shopping Rwanda</h1>
+
+
+        <!-- LOGIN -->
+
+        <div id="login">
+
+            <h2>Customer Login</h2>
+
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="Username"
+            >
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+            >
+
+            <button onclick="loginUser()">
+                Login
+            </button>
+
+            <p id="loginMessage" class="message"></p>
+
+            <p class="switch">
+
+                Don't have an account?
+
+                <span onclick="showSignup()">
+                    Sign Up
+                </span>
+
+            </p>
+
+        </div>
+
+
+        <!-- SIGN UP -->
+
+        <div id="signup">
+
+            <h2>Create Account</h2>
+
+            <input
+                type="text"
+                id="signupUsername"
+                placeholder="Choose a username"
+            >
+
+            <input
+                type="email"
+                id="signupEmail"
+                placeholder="Email address"
+            >
+
+            <input
+                type="password"
+                id="signupPassword"
+                placeholder="Create password"
+            >
+
+            <input
+                type="password"
+                id="signupConfirm"
+                placeholder="Confirm password"
+            >
+
+            <button onclick="createAccount()">
+                Create Account
+            </button>
+
+            <p id="signupMessage" class="message"></p>
+
+            <p class="switch">
+
+                Already have an account?
+
+                <span onclick="showLogin()">
+                    Login
+                </span>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+<script>
+
+function showSignup() {
+
+    document.getElementById("login").style.display = "none";
+
+    document.getElementById("signup").style.display = "block";
+}
+
+
+function showLogin() {
+
+    document.getElementById("signup").style.display = "none";
+
+    document.getElementById("login").style.display = "block";
+}
+
+
+function createAccount() {
+
+    let username =
+        document.getElementById("signupUsername").value.trim();
+
+    let email =
+        document.getElementById("signupEmail").value.trim();
+
+    let password =
+        document.getElementById("signupPassword").value;
+
+    let confirm =
+        document.getElementById("signupConfirm").value;
+
+
+    if (
+        username === "" ||
+        email === "" ||
+        password === "" ||
+        confirm === ""
+    ) {
+
+        document.getElementById("signupMessage").innerText =
+            "Please fill in all fields.";
+
+        return;
+    }
+
+
+    if (password !== confirm) {
+
+        document.getElementById("signupMessage").innerText =
+            "Passwords do not match.";
+
+        return;
+    }
+
+
+    let customer = {
+
+        username: username,
+        email: email,
+        password: password
+
+    };
+
+
+    localStorage.setItem(
+        "customerAccount",
+        JSON.stringify(customer)
+    );
+
+
+    document.getElementById("signupMessage").innerText =
+        "Account created successfully!";
+
+
+    setTimeout(function() {
+
+        showLogin();
+
+    }, 1000);
+
+}
+
+
+function loginUser() {
+
+    let username =
+        document.getElementById("loginUsername").value.trim();
+
+    let password =
+        document.getElementById("loginPassword").value;
+
+
+    let savedAccount =
+        localStorage.getItem("customerAccount");
+
+
+    if (!savedAccount) {
+
+        document.getElementById("loginMessage").innerText =
+            "No account found. Please sign up first.";
+
+        return;
+    }
+
+
+    let customer =
+        JSON.parse(savedAccount);
+
+
+    if (
+        username === customer.username &&
+        password === customer.password
+    ) {
+
+        localStorage.setItem(
+            "customerLoggedIn",
+            "true"
+        );
+
+
+        alert(
+            "Welcome " + customer.username + "!"
+        );
+
+
+        window.location.href = "index.html";
+
+    } else {
+
+        document.getElementById("loginMessage").innerText =
+            "Wrong username or password.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
+```
